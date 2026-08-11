@@ -1,69 +1,110 @@
 # Financial News Sentiment vs NIFTY50 Analysis
 
 ## Project Overview
-This project explores the relationship between financial news sentiment and NIFTY50 market direction using real-world datasets. The goal is to investigate whether information extracted from financial news headlines can provide useful signals about short-term stock market movement.
 
-### Key Components:
-* 3,000+ financial news articles
-* NIFTY50 stock market dataset
-* Rule-based sentiment analysis
-* Data preprocessing and feature engineering
-* Exploratory Data Analysis (EDA)
-* Simple prediction logic
+This project investigates whether financial news sentiment, combined with NIFTY50 market features, can help predict the next-day direction of the NIFTY50 index.
 
-**Tech Stack:** Python, Pandas, Matplotlib, and JupyterLab.
-
----
-
-## Problem Statement
-Financial markets are heavily influenced by information flow, investor psychology, and public sentiment. This project attempts to answer the following question:
-
-> **Can financial news sentiment help explain or predict NIFTY50 market movement?**
-
-Rather than using advanced NLP models or pretrained sentiment engines, this project intentionally uses a beginner-friendly, rule-based approach to build a complete end-to-end data science workflow.
+The project combines financial news data with NIFTY50 market data, performs sentiment-based feature engineering, and evaluates multiple machine learning models for next-day market direction prediction.
 
 ---
 
 ## Objectives
-* **Clean & Preprocess:** Handle real-world, messy financial datasets.
-* **Align Data:** Synchronize stock market data with financial news by date.
-* **Sentiment Scoring:** Create a custom sentiment scoring system using financial vocabulary.
-* **Analyze & Visualize:** Explore relationships between sentiment and market movement using charts.
-* **Predict:** Build and evaluate a basic sentiment-driven prediction model.
+
+- Analyze financial news sentiment.
+- Combine sentiment information with NIFTY50 market data.
+- Engineer features such as sentiment moving averages, sentiment volatility, market movement lags, volume change, and high-low spread.
+- Predict the next-day direction of the NIFTY50.
+- Compare multiple machine learning models.
+- Evaluate whether model predictions can translate into better market performance.
 
 ---
 
-## Dataset Description
+## Technologies Used
 
-### 1. Financial News Dataset
-* **Volume:** 3,000+ financial news headlines (multiple headlines per day)
-* **Coverage Period:** February 2025 – August 2025
-* **Features:** Date, News title / headline text
-
-### 2. NIFTY50 Stock Dataset
-* **Coverage Period:** February 2025 – August 2025
-* **Features:** Date, Open, High, Low, Close, Shares Traded, Turnover
+- Python
+- Pandas
+- NumPy
+- Matplotlib
+- Scikit-learn
+- XGBoost
+- Google Colab
+- GitHub
 
 ---
 
-## Project Workflow
-```text
-Raw Financial News Dataset  +  Raw NIFTY50 Dataset
-                       ↓
-                 Data Cleaning
-                       ↓
-              Date Standardization
-                       ↓
-             News Grouping by Date
-                       ↓
-                  Dataset Merging
-                       ↓
-                Feature Engineering
-                       ↓
-          Rule-Based Sentiment Analysis
-                       ↓
-           Exploratory Data Analysis
-                       ↓
-                Prediction Logic
-                       ↓
-             Performance Evaluation
+## Methodology
+
+The project follows these major steps:
+
+1. Load and clean financial news and NIFTY50 datasets.
+2. Process financial news and calculate sentiment scores.
+3. Aggregate news sentiment by date.
+4. Engineer rolling sentiment features and market-based features.
+5. Create a next-day market direction target.
+6. Split the data chronologically into training and testing periods.
+7. Train and evaluate:
+   - Logistic Regression
+   - Random Forest
+   - XGBoost
+8. Perform time-series cross-validation for Random Forest tuning.
+9. Analyze Random Forest feature importance.
+10. Backtest the Random Forest prediction strategy against a buy-and-hold strategy.
+
+---
+
+## Models Evaluated
+
+| Model | Test Accuracy |
+|---|---:|
+| Majority Baseline | 44% |
+| Logistic Regression | 44% |
+| Random Forest | 48% |
+| XGBoost | 40% |
+| Tuned Random Forest | 44% |
+
+Random Forest achieved the highest initial test accuracy of 48%, although the improvement over the majority baseline was limited.
+
+---
+
+## Key Findings
+
+- Random Forest performed best among the initial models with 48% test accuracy.
+- Logistic Regression performed at the same level as the majority-class baseline.
+- XGBoost achieved 40% test accuracy.
+- Hyperparameter tuning did not improve Random Forest performance on the held-out test set.
+- `volume_change` and `high_low_spread` were among the most important features.
+- Rolling sentiment features, particularly `sentiment_ma7`, showed meaningful feature importance.
+- The raw daily `sentiment_score` had lower feature importance than several engineered features.
+
+---
+
+## Backtesting Results
+
+The Random Forest predictions were used in a simple next-day trading strategy.
+
+| Strategy | Return |
+|---|---:|
+| Random Forest Strategy | -2.14% |
+| Market Buy & Hold | -1.05% |
+
+The model-based strategy underperformed the buy-and-hold market strategy during the tested period.
+
+---
+
+## Conclusion
+
+The results suggest that the available financial news sentiment and market features provided only limited predictive information for next-day NIFTY50 direction in this dataset.
+
+Although Random Forest achieved the highest initial accuracy among the evaluated models, its performance remained close to the majority baseline, and the corresponding trading strategy did not outperform the market.
+
+The analysis demonstrates the challenges involved in predicting short-term financial market movements using sentiment and historical market features.
+
+---
+
+## Project Files
+
+- `financial_news_nifty50_analysis.ipynb` — Complete analysis and machine learning workflow.
+- `final_project_dataset.csv` — Final processed dataset used for modelling.
+- `data/` — Source datasets.
+- `plots/` — Project visualizations.
+- `requirements.txt` — Python dependencies.
